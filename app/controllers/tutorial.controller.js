@@ -33,7 +33,19 @@ exports.create = (req,res) =>{
 
 //Retrieve all Tutorials from the databse.
 exports.findAll = (req, res) =>{
+    const title = req.query.title;
+    var condition = title ? { title: { $regex: new RegExp(title), $options: "i"}} : {};
 
+    Tutorial.find(condition)
+        .then(data =>{
+            res.send(data);
+        })
+        .catch( err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occured while rerieving tutorials."
+            })
+        })
 };
 
 //Find a single Tutorial with an id
@@ -80,15 +92,53 @@ exports.update = (req,res) =>{
 
 //Delete a Tutorial with the specified id in the reqeust
 exports.delete = (req,res) =>{
+    const id = req.params.id;
 
+    Tutorial.findByIdAndRemove(id)
+        .then(data => {
+            if(!data) {
+                res.status(404).send({
+                    message: `Cannot delete Tutorial with id=${id}.  Maybe Tutorial was not found!`
+                });
+            }else{
+                res.send({
+                    message: "Tutorial was deleted successfully!"
+                });
+            }
+        })
+        .catch(err =>{
+            res.status(500).send({
+                message: "Could not delete Tutorial with id=" = id
+            });
+        });
 }
 
 //Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-
-}
+    Tutorial.deleteMany({})
+        .then(data => {
+            res.send({
+                message: `${data.deletedCount} Tutorials were deleted successfully `
+            });
+        })
+        .catch( err=>{
+            res.status(500).send({
+                message :
+                    err.message || "Some error occured while removing all tutorials."
+            })
+        });
+};
 
 //Find all published Tutorials
 exports.findAllPublished = (req, res) =>{
-
-}
+    Tutorial.find({ pudlished : true})
+        .then(data =>{
+            res.send(data);
+        })
+        .catch(err =>{
+            res.status(500).send({
+                message:
+                err.message || "Some error occured while retrieving tutorials."
+            });
+        });
+};
