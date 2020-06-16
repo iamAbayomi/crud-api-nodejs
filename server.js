@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-require("./app/routes/tutorial.routes")(app);
 
 const app = express();
 
@@ -36,6 +35,8 @@ db.mongoose
         process.exit();
     });
 
+
+require("./app/routes/tutorial.routes")(app);
 
 //set port, listen for requests
 const PORT = process.env.PORT || 8080;

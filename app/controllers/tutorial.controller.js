@@ -62,6 +62,7 @@ exports.findOne = (req, res) =>{
             res 
              .status(500)
              .send({message : "Error retrieving Tutorial with id " + id});
+             console.log(err);
         })
 };
 
@@ -108,7 +109,7 @@ exports.delete = (req,res) =>{
         })
         .catch(err =>{
             res.status(500).send({
-                message: "Could not delete Tutorial with id=" = id
+                message: "Could not delete Tutorial with id=" + id
             });
         });
 }
